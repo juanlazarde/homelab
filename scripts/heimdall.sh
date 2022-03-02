@@ -5,7 +5,7 @@ set -o errexit
 # Variables
 read -p "Install Docker/Docker Compose? [y|N]: " yn
 case $yn in
-    [Yy]*)  install_docker=true ;;  
+    [Yy]*)  install_docker=true ;;
     [Nn]*)  install_docker=false ;;
     *)      install_docker=false ;;
 esac
@@ -32,6 +32,8 @@ TIME_ZONE=${TIME_ZONE:-'America/New_York'}
 if ${install_docker}; then source docker.sh; fi
 
 # Docker Compose script
+[[ -f "docker-compose.yaml"]] && cp docker-compose.yaml{,.bak}
+
 cat <<EOF > docker-compose.yaml
 ---
 version: '2.1'

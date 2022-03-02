@@ -13,6 +13,8 @@ esac
 if ${install_docker}; then source docker.sh; fi
 
 # Docker Compose script
+[[ -f "docker-compose.yaml"]] && cp docker-compose.yaml{,.bak}
+
 cat <<EOF > docker-compose.yaml
 ---
 version: '3'

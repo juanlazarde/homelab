@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 # Install NGINX Reverse Proxy Containerized
+# Reference: https://nginxproxymanager.com/
+# Usage: bash nginxproxymanager.sh
+
 set -o errexit
 
 # Variables
 read -p "Install Docker/Docker Compose? [y|N]: " yn
 case $yn in
-    [Yy]*)  install_docker=true ;;  
+    [Yy]*)  install_docker=true ;;
     [Nn]*)  install_docker=false ;;
     *)      install_docker=false ;;
 esac
@@ -30,6 +33,8 @@ MYSQL_ROOT_PASSWORD=$(openssl passwd -6 -noverify | xargs printf '%s' | sed 's/\
 if ${install_docker}; then source docker.sh; fi
 
 # Docker Compose script
+[[ -f "docker-compose.yaml"]] && cp docker-compose.yaml{,.bak}
+
 cat <<EOF > docker-compose.yaml
 ---
 version: '3'
@@ -38,9 +43,10 @@ services:
     image: 'jc21/nginx-proxy-manager:latest'
     container_name: nginx-proxy-manager
     ports:
-      - '80:80'
-      - '${EXTERNAL_ADMIN_PORT}:81'
-      - '443:443'
+      # These ports are in format <host-port>:<container-port>
+      # - '80:80' # Public HTTP Port
+      # - '443:443' # Public HTTPS Port
+      - '${EXTERNAL_ADMIN_PORT}:81' # Admin Web Port
     environment:
       DB_MYSQL_HOST: 'db'
       DB_MYSQL_PORT: 3306
@@ -51,6 +57,9 @@ services:
       - ./nginx/data:/data
       - ./nginx/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
+    depends_on:
+      - db
+
   db:
     image: 'jc21/mariadb-aria:latest'
     container_name: mariadb

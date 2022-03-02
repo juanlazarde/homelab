@@ -33,7 +33,7 @@ MYSQL_ROOT_PASSWORD=$(openssl passwd -6 -noverify | xargs printf '%s' | sed 's/\
 if ${install_docker}; then source docker.sh; fi
 
 # Docker Compose script
-[[ -f "docker-compose.yaml"]] && cp docker-compose.yaml{,.bak}
+[[ -f "docker-compose.yaml" ]] && cp docker-compose.yaml{,.bak}
 
 cat <<EOF > docker-compose.yaml
 ---

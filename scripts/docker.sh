@@ -3,7 +3,7 @@
 set -o errexit
 
 # Install Docker
-printf '%s\n' "\nInstalling Docker\n"
+printf "\nInstalling Docker\n"
 sudo apt update && sudo apt dist-upgrade -y
 sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -13,18 +13,18 @@ apt-cache policy docker-ce
 sudo apt install -y docker-ce
 
 # Install Docker Compose
-printf '%s\n' "\nInstalling Docker Compose\n"
+printf "\nInstalling Docker Compose\n"
 mkdir -p ~/.docker/cli-plugins/
 curl -SL https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
 chmod +x ~/.docker/cli-plugins/docker-compose
 sudo chown ${USER} /var/run/docker.sock
 
 # Docker Command Without Sudo
-printf '%s\n' "\nElevating user priviledge to run docker without sudo\n"
+printf "\nElevating user priviledge to run docker without sudo\n"
 sudo usermod -aG docker ${USER} && su - ${USER}
 
 # Verify
-printf '%s\n' "\nVerifying\n"
+printf "\nVerifying\n"
 sudo systemctl status docker | grep "Active:"
 docker info
 docker compose version
